@@ -267,6 +267,8 @@ section h3 {
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: border-color 0.3s;
+    width: 100%;
+    max-width: 100%;
 }
 
 .form-group input:focus {
@@ -1049,3 +1051,4 @@ section h3 {
         display: block !important;
     }
 }
+
