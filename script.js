@@ -295,9 +295,9 @@ function addItemRow() {
     const tbody = document.getElementById('itemsBody');
     const newRow = document.createElement('tr');
     newRow.className = 'item-row';
-    newRow.innerHTML = '<td><input type="text" class="item-name" placeholder="Nama barang" required></td>' +
-        '<td><input type="number" class="item-quantity" placeholder="Jumlah" min="1" value="1" required></td>' +
-        '<td><input type="text" class="item-note" placeholder="Keterangan"></td>' +
+    newRow.innerHTML = '<td><input type="text" class="item-name" placeholder="Barang" required></td>' +
+        '<td><input type="number" class="item-quantity" placeholder="Jml" min="1" value="1" required></td>' +
+        '<td><input type="text" class="item-note" placeholder="Ket"></td>' +
         '<td><button type="button" class="btn-remove-item" onclick="removeItemRow(this)"><i class="fas fa-trash"></i></button></td>';
     tbody.appendChild(newRow);
 }
@@ -367,9 +367,9 @@ function handleFormSubmit(e) {
     
     const tbody = document.getElementById('itemsBody');
     tbody.innerHTML = '<tr class="item-row">' +
-        '<td><input type="text" class="item-name" placeholder="Nama barang" required></td>' +
-        '<td><input type="number" class="item-quantity" placeholder="Jumlah" min="1" value="1" required></td>' +
-        '<td><input type="text" class="item-note" placeholder="Keterangan"></td>' +
+        '<td><input type="text" class="item-name" placeholder="Barang" required></td>' +
+        '<td><input type="number" class="item-quantity" placeholder="Jml" min="1" value="1" required></td>' +
+        '<td><input type="text" class="item-note" placeholder="Ket"></td>' +
         '<td><button type="button" class="btn-remove-item" onclick="removeItemRow(this)"><i class="fas fa-trash"></i></button></td></tr>';
 }
 
@@ -769,3 +769,4 @@ window.confirmReturn = confirmReturn;
 window.closeConfirmReturnModal = closeConfirmReturnModal;
 window.updateReturnQuantity = updateReturnQuantity;
 window.logout = logout;
+
