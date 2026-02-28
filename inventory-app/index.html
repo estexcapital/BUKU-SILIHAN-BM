@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUKU SILIHAN DIGITAL</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <!-- jsPDF for PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="login-header">
+                <h1><i class="fas fa-clipboard-list"></i></h1>
+                <h2>BUKU SILIHAN DIGITAL</h2>
+                <h3 style="font-size:10px">by ESTEX-CAPITAL</h3>
+                <P>|</P>
+                <p>Ndang login sek Mas!</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Masukkan email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <div id="loginError" class="error-message"></div>
+            </form>
+            <div class="login-help">
+                <p>Ora iso login? Yo pantes, hubungi atmin sek, njaluk email karo password.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Hidden until logged in) -->
+    <div id="mainApp" style="display: none;">
+        <div class="container">
+            <header>
+                <div class="header-content">
+                    <h1><i class="fas fa-clipboard-list"></i> BUKU SILIHAN DIGITAL</h1>
+                    <p style="font-size:10px" >by ESTEX-CAPITAL</p>
+                    <div class="user-info">
+                        <span id="userEmail"></span>
+                        <button class="btn-logout" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Keluar
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Form Section -->
+            <section class="form-section">
+                <h2><i class="fas fa-plus-circle"></i> Formulir Silihan</h2>
+                <form id="loanForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="borrowerName">Nama Peminjam</label>
+                            <input type="text" id="borrowerName" placeholder="Sopo seng nyilih?...." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loanDate">Tanggal Pinjam</label>
+                            <input type="date" id="loanDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="penanggungJawab">Penanggung Jawab</label>
+                            <input type="text" id="penanggungJawab" placeholder="Seng ngejakgolek silihan?...." required>
+                        </div>
+                    </div>
+
+                    <div class="items-section">
+                        <h3>Barang yang Dipinjam</h3>
+                        <table id="itemsTable">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Jumlah</th>
+                                    <th>Keterangan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsBody">
+                                <tr class="item-row">
+                                    <td>
+                                        <input type="text" class="item-name" placeholder="Nama barang" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="item-quantity" placeholder="Jumlah" min="1" value="1" required>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="item-note" placeholder="Keterangan">
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn-remove-item" onclick="removeItemRow(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn-add-item" onclick="addItemRow()">
+                            <i class="fas fa-plus"></i> Tambah Barang
+                        </button>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Simpan
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Search and Filter Section -->
+            <section class="search-filter-section">
+                <h2><i class="fas fa-history"></i> Riwayat Silihan</h2>
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Cari berdasarkan nama peminjam...">
+                    </div>
+                    <div class="filter-box">
+                        <input type="date" id="filterDate">
+                        <button class="btn-filter" onclick="filterByDate()">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="btn-reset" onclick="resetFilter()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="history-section">
+                <div id="historyList" class="history-list">
+                    <!-- History items will be rendered here -->
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal for Detail View -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="detailContent">
+                <!-- Detail content will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Confirm Return -->
+    <div id="confirmReturnModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeConfirmReturnModal()">&times;</span>
+            <div id="confirmReturnContent">
+                <!-- Confirm return content will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Template (Hidden) -->
+    <div id="pdfTemplate" class="pdf-template">
+        <div class="pdf-header">
+            <h1>NOTA PEMINJAMAN BARANG</h1>
+            <div class="pdf-info">
+                <p><strong>Nomor Nota:</strong> <span id="pdfInvoiceNumber"></span></p>
+                <p><strong>Tanggal:</strong> <span id="pdfCurrentDate"></span></p>
+            </div>
+        </div>
+        <div class="pdfBorrower-info">
+            <table>
+                <tr>
+                    <td><strong>Nama Peminjam:</strong></td>
+                    <td id="pdfBorrowerName"></td>
+                </tr>
+                <tr>
+                    <td><strong>Tanggal Pinjam:</strong></td>
+                    <td id="pdfLoanDate"></td>
+                </tr>
+                <tr>
+                    <td><strong>Penanggung Jawab:</strong></td>
+                    <td id="pdfPenanggungJawab"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="pdfItems-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Barang</th>
+                        <th>Jml Pinjam</th>
+                        <th>Jml Kembali</th>
+                        <th>Kurang</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="pdfItemsBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="pdf-footer">
+            <div class="signature-box">
+                <p><strong>Penanggung Jawab:</strong></p>
+                <div class="signature-line"></div>
+            </div>
+            <div class="signature-box">
+                <p><strong>Peminjam:</strong></p>
+                <div class="signature-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    <!-- App Script -->
+    <script src="script.js"></script>
+</body>
+</html>
