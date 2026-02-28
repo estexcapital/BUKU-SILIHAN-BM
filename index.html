@@ -84,22 +84,22 @@
                         <table id="itemsTable">
                             <thead>
                                 <tr>
-                                    <th>Nama Barang</th>
+                                    <th>Barang</th>
                                     <th>Jumlah</th>
-                                    <th>Keterangan</th>
-                                    <th>Aksi</th>
+                                    <th>Ket</th>
+                                    <th>Del</th>
                                 </tr>
                             </thead>
                             <tbody id="itemsBody">
                                 <tr class="item-row">
                                     <td>
-                                        <input type="text" class="item-name" placeholder="Nama barang" required>
+                                        <input type="text" class="item-name" placeholder="Barang" required>
                                     </td>
                                     <td>
-                                        <input type="number" class="item-quantity" placeholder="Jumlah" min="1" value="1" required>
+                                        <input type="number" class="item-quantity" placeholder="Jml" min="1" value="1" required>
                                     </td>
                                     <td>
-                                        <input type="text" class="item-note" placeholder="Keterangan">
+                                        <input type="text" class="item-note" placeholder="Ket">
                                     </td>
                                     <td>
                                         <button type="button" class="btn-remove-item" onclick="removeItemRow(this)">
@@ -110,7 +110,7 @@
                             </tbody>
                         </table>
                         <button type="button" class="btn-add-item" onclick="addItemRow()">
-                            <i class="fas fa-plus"></i> Tambah Barang
+                            <i class="fas fa-plus"></i> Tambah
                         </button>
                     </div>
 
@@ -230,4 +230,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
